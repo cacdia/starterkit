@@ -1,0 +1,33 @@
+import threading
+from http.server import HTTPServer
+from urllib.request import urlopen
+from urllib.error import HTTPError
+import json
+import pytest
+from src.{{package_name}}.server import Handler, HelloResponse
+
+@pytest.fixture(scope="module")
+def server_url():
+    httpd = HTTPServer(("127.0.0.1", 0), Handler)  # porta efêmera
+    port = httpd.server_address[1]
+    t = threading.Thread(target=httpd.serve_forever, kwargs={"poll_interval": 0.1}, daemon=True)
+    t.start()
+    try:
+        yield f"http://127.0.0.1:{port}"
+    finally:
+        httpd.shutdown()
+        t.join(timeout=2)
+        httpd.server_close()
+
+def test_root_validates_with_pydantic(server_url):
+    with urlopen(server_url + "/") as resp:
+        assert resp.status == 200
+        data = json.loads(resp.read().decode("utf-8"))
+    model = HelloResponse.model_validate(data)
+    assert model.message == "Hello, world!"
+    assert model.now.tzinfo is not None  # timezone presente
+
+def test_unknown_path_returns_404(server_url):
+    with pytest.raises(HTTPError) as e:
+        urlopen(server_url + "/nao-existe")
+    assert e.value.code == 404

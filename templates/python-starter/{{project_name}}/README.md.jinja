@@ -1,0 +1,171 @@
+{# README rendered by Copier #}
+{% if include_readme %}
+# {{ project_name | default('Python Starter') }}
+
+## 📋 Conteúdo
+
+- [Pré-requisitos](#pré-requisitos)
+- [Primeiros Passos](#primeiros-passos)
+- [Como Executar](#como-executar)
+- [Testes](#testes)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Comandos Úteis](#comandos-úteis)
+- [Solução de Problemas no Windows](#solução-de-problemas-no-windows)
+
+## 🔧 Pré-requisitos
+
+Instale antes de começar:
+- Visual Studio Code — https://code.visualstudio.com/
+- Git — https://git-scm.com/downloads
+- uv (gerenciador Python)  
+  Windows (PowerShell):
+  ```powershell
+  powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+  ```
+  macOS/Linux:
+  ```bash
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  ```
+
+## 🚀 Primeiros Passos
+
+1) Sincronize as dependências:
+```bash
+uv sync
+```
+
+2) Abra no VS Code:
+```bash
+code .
+```
+- Selecione o interpretador: Python {{ python_version }} da venv (Python: Select Interpreter).
+- Instale as extensões recomendadas quando solicitado.
+
+{% if include_pydantic %}{% else %}
+> Importante: o exemplo de servidor usa Pydantic.  
+> Se você desativou Pydantic na criação, adicione agora:
+```bash
+uv add pydantic>=2.0.0
+```
+{% endif %}
+
+## ▶️ Como Executar
+
+Servidor HTTP simples com JSON:
+- Windows (CMD):
+```cmd
+uv run python src\{{package_name}}\server.py
+```
+- PowerShell:
+```powershell
+uv run python src\{{package_name}}\server.py
+```
+- Linux/macOS:
+```bash
+uv run python src/{{package_name}}/server.py
+```
+
+Acesse: http://127.0.0.1:7123/
+
+Exemplo de resposta:
+```json
+{ "message": "Hello, world!", "now": "2025-01-01T12:34:56.789-03:00" }
+```
+
+## ✅ Testes
+{% if include_tests %}
+Execute:
+```bash
+uv run pytest -q
+```
+{% else %}
+Este template pode incluir uma suíte de testes com pytest. Ative a opção ao gerar o projeto ou adicione:
+```bash
+uv add --dev pytest
+```
+{% endif %}
+
+## 📁 Estrutura do Projeto
+
+```
+{{ project_name }}/
+├── pyproject.toml            # Metadados e dependências
+{% if include_ruff -%}├── ruff.toml                    # Configs do Ruff{% endif %}
+{% if include_makefile -%}├── Makefile                   # Atalhos de desenvolvimento{% endif %}
+{% if include_readme -%}├── README.md                   # Este arquivo{% endif %}
+{% if include_mkdocs -%}├── mkdocs.yml                  # Configs de documentação
+├── docs/
+│   └── index.md              # Página inicial da doc{% endif %}
+├── src/
+│   └── {{package_name}}/
+│       ├── __init__.py
+│       └── server.py         # Servidor HTTP de exemplo (JSON + timezone)
+{% if include_tests -%}├── tests/
+│   └── test_server.py        # Testes de integração do servidor{% endif %}
+{% if include_vscode -%}└── .vscode/
+    ├── settings.json
+    ├── extensions.json
+    {% if include_copilot -%}└── copilot/
+        └── instructions/
+            ├── _base.instructions.md
+            └── uv.instructions.md{% endif %}{% endif %}
+```
+
+## 🧰 Comandos Úteis
+
+- Executar servidor:
+```bash
+uv run python src/{{package_name}}/server.py
+```
+
+{% if include_ruff -%}
+- Formatar:
+```bash
+uv run ruff format .
+```
+- Lint (com correções):
+```bash
+uv run ruff check . --fix
+```
+{%- endif %}
+
+{% if include_tests -%}
+- Testes:
+```bash
+uv run pytest -q
+```
+{%- endif %}
+
+{% if include_pre_commit and include_ruff -%}
+- Instalar pre-commit:
+```bash
+uv run pre-commit install
+```
+{%- endif %}
+
+{% if include_mkdocs -%}
+- Subir docs localmente:
+```bash
+uv run mkdocs serve -a 0.0.0.0:8001
+```
+{%- endif %}
+
+- Dependências:
+```bash
+uv add <pacote> [--dev]
+uv remove <pacote>
+uv sync
+uv lock
+```
+
+## 🪟 Solução de Problemas no Windows
+
+Se o PowerShell bloquear scripts:
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+Dicas:
+- Sempre execute os comandos na raiz do projeto.
+- Se o import falhar em testes, rode via `uv run pytest` (garante ambiente correto).
+{% endif %}

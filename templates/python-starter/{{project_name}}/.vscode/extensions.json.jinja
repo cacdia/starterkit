@@ -1,0 +1,13 @@
+{
+    "recommendations": [
+        "usernamehw.errorlens",
+        "ms-python.python"{% if include_ruff %},
+        "charliermarsh.ruff"{% endif %}{% if include_jupyter %},
+        "ms-toolsai.jupyter",
+        "ms-toolsai.datawrangler",
+        "qwtel.sqlite-viewer"{% endif %}{% if include_vscode and include_copilot %},
+        "GitHub.copilot",
+        "GitHub.copilot-chat"{% endif %}{% if include_mkdocs %},
+        "redhat.vscode-yaml"{% endif %}
+    ]
+}

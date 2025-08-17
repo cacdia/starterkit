@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from datetime import datetime, timezone
+import os
+from pydantic import BaseModel, field_validator
+
+HOST = "0.0.0.0"
+PORT = int(os.environ.get("PORT", "7123"))
+
+class HelloResponse(BaseModel):
+    message: str
+    now: datetime  # ISO 8601
+
+    @field_validator("now")
+    @classmethod
+    def _tz_aware(cls, v: datetime) -> datetime:
+        if v.tzinfo is None or v.tzinfo.utcoffset(v) is None:
+            raise ValueError("datetime precisa ter timezone")
+        return v
+
+class Handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == "/":
+            payload = HelloResponse(
+                message="Hello, world!",
+                now=datetime.now(timezone.utc).astimezone(),
+            )
+            body = payload.model_dump_json().encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+        else:
+            self.send_error(404, "Not Found")
+
+    def log_message(self, fmt, *args):  # silencia logs
+        pass
+
+if __name__ == "__main__":
+    with HTTPServer((HOST, PORT), Handler) as httpd:
+        print(f"servindo em http://{HOST}:{PORT} (CTRL+C para sair)")
+        httpd.serve_forever()

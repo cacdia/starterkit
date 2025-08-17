@@ -1,0 +1,6 @@
+{% if include_ruff %}
+target-version = "py{{ python_version | replace('.', '') }}"
+output-format = "full"
+[lint]
+extend-select = ["UP"]
+{% endif %}

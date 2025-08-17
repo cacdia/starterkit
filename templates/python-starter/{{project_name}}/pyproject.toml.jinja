@@ -1,0 +1,20 @@
+{# Rendered by Copier #}
+[project]
+name = "{{ project_name }}"
+version = "0.0.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = "=={{ python_version }}.*"
+dependencies = [
+    {% set comma = joiner() -%}
+    {% if include_pydantic %}{{ comma() }}"pydantic>=2.0.0"{% endif %}
+]
+
+[dependency-groups]
+dev = [
+    {% if include_jupyter %}"jupyter",{% endif %}
+    {% if include_ruff or include_pre_commit %}"ruff",{% endif %}
+    {% if include_pre_commit %}"pre-commit",{% endif %}
+    {% if include_tests %}"pytest",{% endif %}
+    {% if include_mkdocs %}"mkdocs-material",{% endif %}
+]
