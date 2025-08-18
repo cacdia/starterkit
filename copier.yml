@@ -41,7 +41,7 @@ template:
   type: str
   help: "Qual template você quer usar? (use as setas para escolher)"
   choices:
-    "Python starter (projeto base)": python-starter
+    "Projeto Python (simples)": python-starter
   default: python-starter
 
 # Perguntas comuns
