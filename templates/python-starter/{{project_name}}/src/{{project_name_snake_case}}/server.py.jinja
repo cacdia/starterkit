@@ -2,19 +2,13 @@ from datetime import datetime, UTC
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
 from typing import Final
-{% if include_pydantic %}
-from pydantic import BaseModel, field_validator
-{% else %}
-import json
-from typing import TypedDict
-{% endif %}
+{% if include_pydantic %}from pydantic import BaseModel, field_validator
+{% else %}import json
+from typing import TypedDict{% endif %}
 
 HOST: Final[str] = "0.0.0.0"
 PORT: Final[int] = int(os.environ.get("PORT", "7123"))
-
 {% if include_pydantic %}
-
-
 class HelloResponse(BaseModel):
     """Resposta JSON para o endpoint raiz (/)."""
 
@@ -32,7 +26,6 @@ class HelloResponse(BaseModel):
     def to_json_bytes(self) -> bytes:
         """Serializa o modelo para JSON em bytes (UTF-8)."""
         return self.model_dump_json().encode("utf-8")
-
 
 class Handler(BaseHTTPRequestHandler):
     """Handler HTTP minimal que serve um JSON em '/'."""
@@ -55,22 +48,17 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, format: str, *args) -> None:
         """Silencia logging padrão para manter testes limpos."""
         return
-
 {% else %}
-
-
 class HelloResponseDict(TypedDict):
     """Resposta JSON para o endpoint raiz (/)."""
 
     message: str
     now: str  # ISO 8601 string
 
-
 def make_hello_response() -> HelloResponseDict:
     """Cria o payload com datetime timezone-aware e retorna dict serializável."""
     now = datetime.now(UTC).astimezone().isoformat()
     return {"message": "Hello, world!", "now": now}
-
 
 class Handler(BaseHTTPRequestHandler):
     """Handler HTTP minimal que serve um JSON em '/'."""
@@ -92,9 +80,7 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, format: str, *args) -> None:
         """Silencia logging padrão para manter testes limpos."""
         return
-
 {% endif %}
-
 
 if __name__ == "__main__":
     with HTTPServer((HOST, PORT), Handler) as httpd:
