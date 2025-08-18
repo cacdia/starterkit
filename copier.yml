@@ -38,6 +38,12 @@ _tasks:
   - command: ["git", "init", "--initial-branch=master"]
     when: "{{ _copier_operation == 'copy' }}"
     working_directory: "{{ project_name }}"
+  - command: ["git", "add", "."]
+    when: "{{ _copier_operation == 'copy' }}"
+    working_directory: "{{ project_name }}"
+  - command: ["git", "commit", "-m", "init commit"]
+    when: "{{ _copier_operation == 'copy' }}"
+    working_directory: "{{ project_name }}"
 
 # Sufixo para renderizar arquivos como templates
 _templates_suffix: ".jinja"
