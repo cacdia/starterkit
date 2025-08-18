@@ -8,7 +8,7 @@ help:
     {% if include_tests %}@echo "  make test    - Executa testes"{% endif %}
 
 run:
-    uv run main.py
+    uv run -m src.{{project_name_snake_case}}.server
 {% if include_ruff %}
 format:
     uv run ruff format .{% endif %}

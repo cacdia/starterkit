@@ -6,7 +6,7 @@ from typing import Final
 {% else %}import json
 from typing import TypedDict{% endif %}
 
-HOST: Final[str] = "0.0.0.0"
+HOST: Final[str] = "127.0.0.1"
 PORT: Final[int] = int(os.environ.get("PORT", "7123"))
 {% if include_pydantic %}
 class HelloResponse(BaseModel):

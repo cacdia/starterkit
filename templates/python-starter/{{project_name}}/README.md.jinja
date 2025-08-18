@@ -54,15 +54,15 @@ uv add pydantic>=2.0.0
 Servidor HTTP simples com JSON:
 - Windows (CMD):
 ```cmd
-uv run python src\{{project_name_snake_case}}\server.py
+uv run -m src.{{project_name_snake_case}}.server
 ```
 - PowerShell:
 ```powershell
-uv run python src\{{project_name_snake_case}}\server.py
+uv run -m src.{{project_name_snake_case}}.server
 ```
 - Linux/macOS:
 ```bash
-uv run python src/{{project_name_snake_case}}/server.py
+uv run -m src.{{project_name_snake_case}}.server
 ```
 
 Acesse: http://127.0.0.1:7123/
@@ -115,7 +115,7 @@ uv add --dev pytest
 
 - Executar servidor:
 ```bash
-uv run python src/{{project_name_snake_case}}/server.py
+uv run -m src.{{project_name_snake_case}}.server
 ```
 
 {% if include_ruff -%}
