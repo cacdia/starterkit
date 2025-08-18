@@ -1,5 +1,6 @@
 {
-  // Python analysis
+  //"python.defaultInterpreterPath": ".venv/bin/python",
+  //"python.defaultInterpreterPath": ".venv/Scripts/python",
   "python.analysis.autoImportCompletions": true,
   "python.analysis.diagnosticMode": "workspace",
   "python.analysis.importFormat": "absolute",
@@ -12,7 +13,7 @@
   "yaml.schemas": {
     "https://squidfunk.github.io/mkdocs-material/schema.json": "mkdocs.yml"
   },
-  "yaml.customTags": [ 
+  "yaml.customTags": [
     "!ENV scalar",
     "!ENV sequence",
     "!relative scalar",
@@ -31,7 +32,8 @@
   "ruff.fixAll": true,
   "ruff.organizeImports": true,
   "[python]": {
-    "editor.defaultFormatter": "charliermarsh.ruff"
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true
   },{% endif %}{% if include_jupyter %}
   "jupyter.askForKernelRestart": false,
   "jupyter.widgetScriptSources": [
