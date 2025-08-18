@@ -1,20 +1,20 @@
 .PHONY: help run format lint test
 
 help:
-    @echo "Alvos disponíveis:"
-    @echo "  make run     - Executa o app (uv run main.py)"
-    {% if include_ruff %}@echo "  make format  - Formata com Ruff"{% endif %}
-    {% if include_ruff %}@echo "  make lint    - Lint com Ruff (—fix)"{% endif %}
-    {% if include_tests %}@echo "  make test    - Executa testes"{% endif %}
+	@echo "Alvos disponíveis:"
+	@echo "  make run     - Executa o app (uv run main.py)"
+	{% if include_ruff %}@echo "  make format  - Formata com Ruff"{% endif %}
+	{% if include_ruff %}@echo "  make lint    - Lint com Ruff (—fix)"{% endif %}
+	{% if include_tests %}@echo "  make test    - Executa testes"{% endif %}
 
 run:
-    uv run -m src.{{project_name_snake_case}}.server
+	uv run -m src.{{project_name_snake_case}}.server
 {% if include_ruff %}
 format:
-    uv run ruff format .{% endif %}
+	uv run ruff format .{% endif %}
 {% if include_ruff %}
 lint:
-    uv run ruff check . --fix{% endif %}
+	uv run ruff check . --fix{% endif %}
 {% if include_tests %}
 test:
-    uv run pytest -q{% endif %}
+	uv run pytest -q{% endif %}
