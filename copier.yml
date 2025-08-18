@@ -25,6 +25,20 @@ _message_after_copy: |
   Isso garante que o VS Code use o interpretador do ambiente virtual criado.
   {% endif %}
 
+  {% if template == 'nextjs15-starter' %}
+  Para instalar dependências do Node e preparar o projeto execute:
+
+    cd "{{ project_name }}"
+    pnpm install
+
+  Se o pnpm solicitar aprovação de builds (native builds verification),
+  execute também:
+
+    pnpm approve-builds
+
+  Isso instalará as dependências e aprovará quaisquer builds nativos necessários.
+  {% endif %}
+
 _message_before_update: |
   Atualizarei seu projeto com as novas opções. As respostas anteriores serão
   pré-preenchidas — revise antes de confirmar.
@@ -42,6 +56,7 @@ template:
   help: "Qual template você quer usar? (use as setas para escolher)"
   choices:
     "Projeto Python (simples)": python-starter
+    "Next.js 15 (approuter)": nextjs15-starter
   default: python-starter
 
 # Perguntas comuns
