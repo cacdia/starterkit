@@ -1,14 +1,19 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from datetime import datetime, timezone
+from datetime import datetime, UTC
 import os
-import json
-from typing import TypedDict
 
 HOST = "0.0.0.0"
 PORT = int(os.environ.get("PORT", "7123"))
 
 {% if include_pydantic %}
 from pydantic import BaseModel, field_validator
+{% else %}
+import json
+from typing import TypedDict
+{% endif %}
+
+
+{% if include_pydantic %}
 
 
 class HelloResponse(BaseModel):
@@ -34,7 +39,7 @@ class HelloResponseDict(TypedDict):
 
 def make_hello_response() -> HelloResponseDict:
     # datetime.isoformat() produces an offset-aware string when tz-aware
-    now = datetime.now(timezone.utc).astimezone().isoformat()
+    now = datetime.now(UTC).astimezone().isoformat()
     return {"message": "Hello, world!", "now": now}
 
 {% endif %}
@@ -46,7 +51,7 @@ class Handler(BaseHTTPRequestHandler):
             {% if include_pydantic %}
             payload = HelloResponse(
                 message="Hello, world!",
-                now=datetime.now(timezone.utc).astimezone(),
+                now=datetime.now(UTC).astimezone(),
             )
             body = payload.to_json_bytes()
             {% else %}
