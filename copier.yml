@@ -34,6 +34,14 @@ template:
 project_name:
   type: str
   help: Nome do projeto
+  default: "meu-projeto"
+
+# Nome do projeto em snake_case gerado a partir de project_name
+project_name_snake_case:
+  type: str
+  help: Gerado automaticamente a partir de project_name se vazio.
+  default: "{{ project_name | lower | replace(' ', '_') | replace('-', '_') }}"
+  when: false
 
 # Perguntas específicas do template "python-starter"
 python_version:
