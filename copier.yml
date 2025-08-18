@@ -6,111 +6,131 @@ _subdirectory: "templates/{{ template }}"
 # Um arquivo de respostas por template, permitindo update seguro por filho
 _answers_file: ".copier-answers.{{ template }}.yml"
 
-# Mensagens
+# Mensagens mais informativas
 _message_before_copy: |
-  Vou gerar um projeto a partir do starterkit. Escolha o template desejado.
+  Vou gerar um projeto a partir do starterkit. Escolha o template desejado
+  e confirme as opções. Ao final, receberá instruções de próximos passos.
 
 _message_after_copy: |
   Projeto "{{ project_name }}" criado a partir do template "{{ template }}".
 
+  {% if template == 'python-starter' and include_vscode %}
+  ATENÇÃO (VS Code): você incluiu as configurações do VS Code. Após executar
+  `uv sync` abra o arquivo "{{ project_name }}/.vscode/settings.json" e
+  ajuste "python.defaultInterpreterPath" para o caminho do venv do projeto:
+
+    - Windows: ".venv/Scripts/python"
+    - Linux/macOS: ".venv/bin/python"
+
+  Isso garante que o VS Code use o interpretador do ambiente virtual criado.
+  {% endif %}
+
 _message_before_update: |
-  Atualizarei seu projeto com as novas opções. Você poderá revisar valores pré-preenchidos.
+  Atualizarei seu projeto com as novas opções. As respostas anteriores serão
+  pré-preenchidas — revise antes de confirmar.
 
 _message_after_update: |
   Projeto "{{ project_name }}" atualizado com sucesso!
-  Revise arquivos com conflitos (se houver), faça os ajustes e confirme as mudanças no Git.
+  Revise arquivos com conflitos (se houver), ajuste e confirme no Git.
 
-# Sufixo para renderizar todos os arquivos como templates
+# Sufixo para renderizar arquivos como templates
 _templates_suffix: ".jinja"
 
-# Escolha do template filho
+# Escolha do template filho — rótulos mais amigáveis
 template:
   type: str
-  help: Qual template você quer usar?
+  help: "Qual template você quer usar? (use as setas para escolher)"
   choices:
-    - python-starter
+    "Python starter (projeto base)": python-starter
+  default: python-starter
 
 # Perguntas comuns
 project_name:
   type: str
-  help: Nome do projeto
+  help: "Nome do projeto (ex: meu-projeto). Usado como raiz do repositório."
+  placeholder: "meu-projeto"
   default: "meu-projeto"
+  validator: >-
+    {% if not project_name or not (project_name | regex_search('^[a-z][a-z0-9\\-_]+$')) %}
+    O nome deve começar com letra minúscula e conter apenas letras, dígitos, '-' ou '_'.
+    {% endif %}
 
-# Nome do projeto em snake_case gerado a partir de project_name
+# Nome do projeto em snake_case gerado a partir de project_name (não perguntado)
 project_name_snake_case:
   type: str
-  help: Gerado automaticamente a partir de project_name se vazio.
+  help: "Gerado automaticamente a partir de project_name se vazio."
   default: "{{ project_name | lower | replace(' ', '_') | replace('-', '_') }}"
   when: false
 
 # Perguntas específicas do template "python-starter"
 python_version:
   type: str
-  help: Versão do Python a ser usada
+  help: "Versão do Python a ser usada"
   choices:
-    - "3.13"
-    - "3.12"
+    "3.13 (recomendada)": "3.13"
+    "3.12": "3.12"
+    "3.11": "3.11"
   default: "3.13"
   when: "{{ template == 'python-starter' }}"
 
 # Booleans (somente quando python-starter)
 include_ruff:
   type: bool
-  help: Incluir Ruff (formatter+linter)?
+  help: "Incluir Ruff (formatter + linter)?"
   default: true
   when: "{{ template == 'python-starter' }}"
 
 include_pre_commit:
   type: bool
-  help: Incluir pre-commit com hooks do Ruff?
+  help: "Incluir pre-commit com hooks do Ruff? (requer Ruff)"
   default: true
-  when: "{{ template == 'python-starter' }}"
+  when: "{{ template == 'python-starter' and include_ruff }}"
 
 include_jupyter:
   type: bool
-  help: Incluir suporte a Jupyter?
+  help: "Incluir suporte a Jupyter (notebooks)?"
   default: false
   when: "{{ template == 'python-starter' }}"
 
 include_pydantic:
   type: bool
-  help: Incluir Pydantic 2.x?
+  help: "Incluir Pydantic 2.x (modelos/validações)?"
   default: true
   when: "{{ template == 'python-starter' }}"
 
 include_tests:
   type: bool
-  help: Incluir estrutura de testes?
+  help: "Incluir estrutura de testes (pytest)?"
   default: true
   when: "{{ template == 'python-starter' }}"
 
 include_makefile:
   type: bool
-  help: Incluir Makefile com alvos úteis?
+  help: "Incluir Makefile com alvos úteis (venv/test/lint)?"
   default: true
   when: "{{ template == 'python-starter' }}"
 
 include_mkdocs:
   type: bool
-  help: Incluir documentação com MkDocs Material?
+  help: "Incluir documentação com MkDocs Material?"
   default: false
   when: "{{ template == 'python-starter' }}"
 
 include_vscode:
   type: bool
-  help: Incluir configurações do VS Code (.vscode)?
+  help: "Incluir configurações do VS Code (.vscode)?"
   default: true
   when: "{{ template == 'python-starter' }}"
 
 include_copilot:
   type: bool
-  help: Incluir configurações do Copilot (arquivos em .vscode/copilot)?
+  help: "Incluir configurações do Copilot (.vscode/copilot)?"
   default: true
   when: "{{ template == 'python-starter' and include_vscode }}"
 
 include_readme:
   type: bool
-  help: Incluir README.md inicial?
+  help: "Gerar um README.md inicial com instruções básicas?"
   default: true
   when: "{{ template == 'python-starter' }}"
 
@@ -124,14 +144,14 @@ _exclude:
   - ".git"
   - ".DS_Store"
   - ".svn"
-  # VSCode/Copilot
-  - "{% if template == 'python-starter' and not include_vscode %}{{ project_name }}/.vscode{% endif %}"
-  - "{% if template == 'python-starter' and include_vscode and not include_copilot %}{{ project_name }}/.vscode/copilot{% endif %}"
+  # VSCode/Copilot (excluir apenas no projeto gerado)
+  - "{% if template == 'python-starter' and not include_vscode %}{{ project_name }}/.vscode/{% endif %}"
+  - "{% if template == 'python-starter' and include_vscode and not include_copilot %}{{ project_name }}/.vscode/copilot/{% endif %}"
   - "{% if template == 'python-starter' and include_vscode and not include_copilot %}{{ project_name }}/.vscode/mcp.json{% endif %}"
   # Pre-commit opcional (somente se Ruff habilitado)
-  - "{% if template == 'python-starter' and ((not include_pre_commit) or (not include_ruff)) %}**/.pre-commit-config.yaml{% endif %}"
+  - "{% if template == 'python-starter' and ((not include_pre_commit) or (not include_ruff)) %}{{ project_name }}/.pre-commit-config.yaml{% endif %}"
   # Tests
-  - "{% if template == 'python-starter' and not include_tests %}{{ project_name }}/tests/**{% endif %}"
+  - "{% if template == 'python-starter' and not include_tests %}{{ project_name }}/tests/{% endif %}"
   # Makefile (opcional)
   - "{% if template == 'python-starter' and not include_makefile %}{{ project_name }}/Makefile{% endif %}"
   # Ruff opcional
@@ -140,4 +160,4 @@ _exclude:
   - "{% if template == 'python-starter' and not include_readme %}{{ project_name }}/README.md{% endif %}"
   # MkDocs opcional
   - "{% if template == 'python-starter' and not include_mkdocs %}{{ project_name }}/mkdocs.yml{% endif %}"
-  - "{% if template == 'python-starter' and not include_mkdocs %}{{ project_name }}/docs/**{% endif %}"
+  - "{% if template == 'python-starter' and not include_mkdocs %}{{ project_name }}/docs/{% endif %}"
