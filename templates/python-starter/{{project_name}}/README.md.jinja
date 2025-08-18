@@ -17,7 +17,7 @@
 Instale antes de começar:
 - Visual Studio Code — https://code.visualstudio.com/
 - Git — https://git-scm.com/downloads
-- uv (gerenciador Python)  
+- uv (gerenciador Python)
   Windows (PowerShell):
   ```powershell
   powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
@@ -42,7 +42,7 @@ code .
 - Instale as extensões recomendadas quando solicitado.
 
 {% if include_pydantic %}{% else %}
-> Importante: o exemplo de servidor usa Pydantic.  
+> Importante: o exemplo de servidor usa Pydantic.
 > Se você desativou Pydantic na criação, adicione agora:
 ```bash
 uv add pydantic>=2.0.0
@@ -54,15 +54,15 @@ uv add pydantic>=2.0.0
 Servidor HTTP simples com JSON:
 - Windows (CMD):
 ```cmd
-uv run python src\{{package_name}}\server.py
+uv run python src\{{project_name_snake_case}}\server.py
 ```
 - PowerShell:
 ```powershell
-uv run python src\{{package_name}}\server.py
+uv run python src\{{project_name_snake_case}}\server.py
 ```
 - Linux/macOS:
 ```bash
-uv run python src/{{package_name}}/server.py
+uv run python src/{{project_name_snake_case}}/server.py
 ```
 
 Acesse: http://127.0.0.1:7123/
@@ -97,7 +97,7 @@ uv add --dev pytest
 ├── docs/
 │   └── index.md              # Página inicial da doc{% endif %}
 ├── src/
-│   └── {{package_name}}/
+│   └── {{project_name_snake_case}}/
 │       ├── __init__.py
 │       └── server.py         # Servidor HTTP de exemplo (JSON + timezone)
 {% if include_tests -%}├── tests/
@@ -115,7 +115,7 @@ uv add --dev pytest
 
 - Executar servidor:
 ```bash
-uv run python src/{{package_name}}/server.py
+uv run python src/{{project_name_snake_case}}/server.py
 ```
 
 {% if include_ruff -%}
