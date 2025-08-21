@@ -57,6 +57,7 @@ template:
   choices:
     "Projeto Python (simples)": python-starter
     "Next.js 15 (approuter)": nextjs15-starter
+    "Astro.js": astrojs-starter
   default: python-starter
 
 # Perguntas comuns

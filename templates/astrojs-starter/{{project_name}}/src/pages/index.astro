@@ -1,0 +1,78 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection(
+  'blog',
+  ({ data }) => import.meta.env.PROD ? data.draft !== true : true
+);
+
+// Mostrar apenas os 3 posts mais recentes
+const recentPosts = posts
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+---
+<Layout>
+  <header class="mb-8">
+    <h1 class="text-3xl font-semibold">Starterkit — Project Overview</h1>
+    <p class="mt-2 text-sm text-slate-600">
+      Projeto inicial com Astro 5, Content Collections, Tailwind v4 e exemplos de componentes.
+    </p>
+  </header>
+
+  <section class="grid gap-6 sm:grid-cols-2">
+    <div class="bg-white p-6 rounded-lg border border-gray-100 shadow-sm">
+      <h2 class="text-lg font-medium">Quick status</h2>
+      <ul class="mt-3 text-sm text-slate-700 space-y-2">
+        <li><strong>Posts:</strong> {posts.length}</li>
+        <li><strong>Pages:</strong> <code>/src/pages</code></li>
+        <li><strong>Components:</strong> <code>/src/components</code></li>
+        <li><strong>Styles:</strong> <code>/src/styles/global.css</code> (Tailwind v4)</li>
+      </ul>
+      <div class="mt-4">
+        <a class="inline-block text-sm px-3 py-2 rounded bg-slate-100 hover:bg-slate-200" href="/blog/">Ver blog</a>
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg border border-gray-100 shadow-sm">
+      <h2 class="text-lg font-medium">Run & Develop</h2>
+      <p class="mt-2 text-sm text-slate-600">Comandos principais (Windows):</p>
+      <pre class="mt-3 rounded bg-slate-50 p-3 text-xs overflow-auto">
+pnpm install
+pnpm dev -- --host     # Iniciar servidor de desenvolvimento (ex.: http://localhost:3000)
+pnpm build
+pnpm preview
+      </pre>
+      <p class="mt-3 text-xs text-slate-500">Use pnpm como gerenciador (recomendado pelo template).</p>
+    </div>
+  </section>
+
+  <section class="mt-6">
+    <h2 class="text-xl font-medium">Últimos posts</h2>
+    <ul class="mt-4 grid gap-3">
+      {recentPosts.length === 0 ? (
+        <li class="text-sm text-slate-600">Nenhum post encontrado. Adicione markdown em <code>/src/data/blog</code>.</li>
+      ) : (
+        recentPosts.map((post) => (
+          <li class="bg-white rounded-lg p-4 border border-gray-100 shadow-sm">
+            <a class="block" href={`/blog/${post.id}/`}>
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="text-md font-medium">{post.data.title}</h3>
+                  <p class="mt-1 text-sm text-slate-600">{post.data.description}</p>
+                </div>
+                <time class="text-xs text-slate-500 ml-4">{post.data.pubDate.toDateString()}</time>
+              </div>
+            </a>
+          </li>
+        ))
+      )}
+    </ul>
+  </section>
+
+  <footer class="mt-8 text-sm text-slate-500">
+    <p>
+      Dica: edite <code>/src/pages</code>, <code>/src/components</code> e <code>/src/data/blog</code> para personalizar o projeto.
+    </p>
+  </footer>
+</Layout>
