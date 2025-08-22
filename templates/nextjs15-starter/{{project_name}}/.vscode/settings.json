@@ -1,0 +1,61 @@
+{
+  "[typescript]": {
+    "editor.formatOnSave": true,
+  },
+  "files.exclude": {
+    "**/.next": true,
+    "**/node_modules": true,
+  },
+  "files.encoding": "utf8",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.eol": "\n",
+  // Melhorias de produtividade
+  "editor.acceptSuggestionOnEnter": "smart",
+  "editor.aiStats.enabled": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.formatOnPaste": false,
+  "editor.guides.bracketPairs": true,
+  "editor.hover.enabled": true,
+  "editor.snippetSuggestions": "top",
+  "editor.suggestSelection": "first",
+  "explorer.compactFolders": false,
+  "workbench.tree.indent": 12,
+  //Biome
+  "biome.enabled": true,
+  "biome.configurationPath": "main/biome.json",
+  "biome.requireConfiguration": true,
+  "biome.suggestInstallingGlobally": true,
+  // Configurações do chat
+  "chat.agent.enabled": true,
+  "chat.agent.maxRequests": 100,
+  "chat.checkpoints.enabled": true,
+  "chat.commandCenter.enabled": true,
+  "chat.extensionTools.enabled": true,
+  "chat.instructionsFilesLocations": {
+    ".vscode/copilot/instructions": true
+  },
+  "chat.math.enabled": true,
+  "chat.mcp.autostart": "newAndOutdated",
+  "chat.mcp.discovery.enabled": true,
+  "chat.mcp.enabled": true,
+  "chat.promptFilesLocations": {
+    ".vscode/copilot/prompts": true
+  },
+  "chat.sendElementsToChat.enabled": true,
+  "chat.todoListTool.enabled": true,
+  "chat.tools.useTreePicker": true,
+  "github.copilot.advanced": {
+    "useLanguageServer": true
+  },
+  "github.copilot.chat.agent.autoFix": true,
+  "github.copilot.chat.agent.runTasks": true,
+  "github.copilot.chat.agent.thinkingTool": true,
+  "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+  "github.copilot.chat.codesearch.enabled": true,
+  "github.copilot.chat.reviewSelection.enabled": true,
+  "github.copilot.chat.summarizeAgentConversationHistory.enabled": true,
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "github.copilot.nextEditSuggestions.fixes": true,
+}
